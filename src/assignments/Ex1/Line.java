@@ -1,6 +1,8 @@
 package assignments.Ex1;
 
 public class Line {
+    private static final double EPS = 1e-7;
+
     private Point start;
     private Point end;
 
@@ -90,10 +92,9 @@ public class Line {
 
         double cross = (x - x1) * (y2 - y1) - (y - y1) * (x2 - x1);
 
-        if (cross != 0) return false;
+        if (Math.abs(cross) > EPS) return false;
 
-        return (x >= Math.min(x1, x2) && x <= Math.max(x1, x2)) && (y >= Math.min(y1, y2) && y <= Math.max(y1, y2));
-
+        return (x >= Math.min(x1, x2) - EPS && x <= Math.max(x1, x2) + EPS) && (y >= Math.min(y1, y2) - EPS && y <= Math.max(y1, y2) + EPS);
     }
 
     // Returns the intersection point if the lines intersect,
