@@ -1,4 +1,7 @@
-package assignments.Ex1;
+package assignments.Ex1.Test;
+
+import assignments.Ex1.Line;
+import assignments.Ex1.Point;
 
 /**
  * This class does some simple tessting of the Point and Line classes.

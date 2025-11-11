@@ -1,5 +1,6 @@
-package assignments.Ex1;
+package assignments.Ex1.Test;
 
+import assignments.Ex1.Ball;
 import biuoop.GUI;
 import biuoop.DrawSurface;
 

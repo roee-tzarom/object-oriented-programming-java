@@ -9,14 +9,16 @@ public class Ball {
     private Color color;
     private Velocity velocity;
 
-    private static final int WIDTH = 200;
-    private static final int HEIGHT = 200;
+    private int left = 0;
+    private int right = 700;
+    private int top = 0;
+    private int bottom = 700;
 
 
     // --- Constructor ---
-    public Ball(double x, double y, int r, Color color) {
-        this.center = new Point(x, y);  // יוצרים נקודה חדשה מהמיקום
-        this.radius = r;
+    public Ball(double x, double y, int size, Color color) {
+        this.center = new Point(x, y);
+        this.radius = size;
         this.color = color;
     }
 
@@ -49,6 +51,14 @@ public class Ball {
         this.velocity = new Velocity(dx, dy);
     }
 
+    //פונקציה שמשנה את הגבולות (כשהכדור נוצר במסגרת אחרת)
+    public void setBounds(int left, int right, int top, int bottom) {
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
+    }
+
     // --- Draw the ball on the given DrawSurface ---
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.color);
@@ -58,17 +68,45 @@ public class Ball {
         double nextX = this.center.getX() + this.velocity.getDX();
         double nextY = this.center.getY() + this.velocity.getDY();
 
-        // בדיקה לפגיעה בקירות ימין ושמאל
-        if (nextX + this.radius > WIDTH || nextX - this.radius < 0) {
-            // הופכים את כיוון התנועה בציר X
+        if (nextX + this.radius > right || nextX - this.radius < left) {
             this.velocity = new Velocity(-this.velocity.getDX(), this.velocity.getDY());
+            nextX = Math.max(left + this.radius, Math.min(nextX, right - this.radius));
         }
 
-        // בדיקה לפגיעה בקירות עליון ותחתון
-        if (nextY + this.radius > HEIGHT || nextY - this.radius < 0) {
-            // הופכים את כיוון התנועה בציר Y
+        if (nextY + this.radius > bottom || nextY - this.radius < top) {
             this.velocity = new Velocity(this.velocity.getDX(), -this.velocity.getDY());
+            nextY = Math.max(top + this.radius, Math.min(nextY, bottom - this.radius));
         }
-        this.center = this.velocity.applyToPoint(this.center);
+
+        this.center = new Point(nextX, nextY);
+    }
+
+    // פלטת צבעים גלובלית לכל הכדורים
+    private static final Color[] PALETTE = new Color[] {
+            Color.YELLOW,
+            Color.RED,
+            Color.BLUE,
+            Color.PINK,
+            Color.LIGHT_GRAY,
+            Color.ORANGE,
+            Color.GREEN,
+            Color.CYAN,
+            Color.MAGENTA,
+            new Color(128, 0, 128),     // Purple
+            new Color(255, 105, 180),   // Hot Pink
+            new Color(255, 165, 0),     // Vivid Orange
+            new Color(0, 128, 128),     // Teal
+            new Color(0, 191, 255),     // Deep Sky Blue
+            new Color(46, 139, 87),     // Sea Green
+            new Color(218, 112, 214),   // Orchid
+            new Color(255, 215, 0),     // Gold
+            new Color(205, 92, 92),     // Indian Red
+            new Color(70, 130, 180),    // Steel Blue
+            new Color(154, 205, 50)     // Yellow Green
+    };
+
+    // בוחר צבע שונה לכל 20 כדורים
+    public static Color getColorByIndex(int index) {
+        return PALETTE[index % PALETTE.length];
     }
 }

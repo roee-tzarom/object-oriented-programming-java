@@ -6,7 +6,7 @@ import biuoop.DrawSurface;
 import java.util.Random;
 import java.awt.Color;
 
-public class AbstractArtGui {
+public class AbstractArtDrawing {
 
     // עוזרים קטנים לקריאות: עיגול מ-double ל-int בשביל ה-drawLine שעובד עם int ולא double
     private static int X(Point p) { return (int) Math.round(p.getX()); }
@@ -56,7 +56,7 @@ public class AbstractArtGui {
     }
 
     public static void main(String[] args) {
-        AbstractArtGui art = new AbstractArtGui();
+        AbstractArtDrawing art = new AbstractArtDrawing();
         art.drawLines();
     }
 }

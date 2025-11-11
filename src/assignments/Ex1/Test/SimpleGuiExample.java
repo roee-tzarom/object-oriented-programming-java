@@ -1,4 +1,4 @@
-    package assignments.Ex1;
+    package assignments.Ex1.Test;
 
     import biuoop.GUI;
     import biuoop.DrawSurface;

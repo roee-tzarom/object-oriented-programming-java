@@ -8,16 +8,27 @@ import java.awt.Color;
 public class BouncingBallAnimation {
 
     static private void drawAnimation(Point start, double angle, double speed) {
-        GUI gui = new GUI("title", 200, 200);
+
+        final int WIDTH = 200, HEIGHT = 200;
+        GUI gui = new GUI("title", WIDTH, HEIGHT);
+
         Sleeper sleeper = new Sleeper();
 
         Ball ball = new Ball(start.getX(), start.getY(), 30, Color.BLACK);
-        Velocity v = Velocity.fromAngleAndSpeed(angle, speed);
-        ball.setVelocity(v);
+
+        ball.setBounds(0, WIDTH, 0, HEIGHT);
+
+        ball.setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
 
         while (true) {
+
             ball.moveOneStep();
+
             DrawSurface d = gui.getDrawSurface();
+
+            d.setColor(Color.WHITE);
+            d.fillRectangle(0, 0, WIDTH, HEIGHT);
+
             ball.drawOn(d);
             gui.show(d);
             sleeper.sleepFor(50);
