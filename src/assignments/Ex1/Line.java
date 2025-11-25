@@ -1,4 +1,6 @@
 package assignments.Ex1;
+import assignments.Ex2.Rectangle;
+
 
 public class Line {
     private static final double EPS = 1e-7;
@@ -125,4 +127,32 @@ public class Line {
         return (this.start.equals(other.start) && this.end.equals(other.end)) ||
                 (this.start.equals(other.end) && this.end.equals(other.start));
     }
+
+    // for Ex2:
+
+    // If this line does not intersect with the rectangle, return null.
+    // Otherwise, return the closest intersection point to the
+    // start of the line.
+    public Point closestIntersectionToStartOfLine(Rectangle rect) {
+        java.util.List<Point> points = rect.intersectionPoints(this);
+
+        if (points.isEmpty()) {
+            return null;
+        }
+
+        Point closest = points.get(0);
+        double minDist = this.start().distance(closest);
+
+        for (int i = 1; i < points.size(); i++) {
+            Point p = points.get(i);
+            double d = this.start().distance(p);
+            if (d < minDist) {
+                minDist = d;
+                closest = p;
+            }
+        }
+
+        return closest;
+    }
+
 }

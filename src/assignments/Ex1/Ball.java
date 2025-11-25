@@ -3,7 +3,14 @@ package assignments.Ex1;
 import biuoop.DrawSurface;
 import java.awt.Color;
 
-public class Ball {
+import assignments.Ex2.GameEnvironment;
+import assignments.Ex2.CollisionInfo;
+import assignments.Ex2.Collidable;
+import assignments.Ex2.Sprite;
+import assignments.Ex2.Game;
+
+
+public class Ball implements Sprite {
     private Point center;
     private int radius;
     private Color color;
@@ -64,21 +71,64 @@ public class Ball {
         surface.setColor(this.color);
         surface.fillCircle(this.getX(), this.getY(), this.radius);
     }
+
     public void moveOneStep() {
-        double nextX = this.center.getX() + this.velocity.getDX();
-        double nextY = this.center.getY() + this.velocity.getDY();
+        Point start = this.center;
+        Point end = this.velocity.applyToPoint(this.center);
+        Line trajectory = new Line(start, end);
 
-        if (nextX + this.radius > right || nextX - this.radius < left) {
-            this.velocity = new Velocity(-this.velocity.getDX(), this.velocity.getDY());
-            nextX = Math.max(left + this.radius, Math.min(nextX, right - this.radius));
+        if (this.gameEnvironment == null) {
+            this.center = end;
+            return;
         }
 
-        if (nextY + this.radius > bottom || nextY - this.radius < top) {
-            this.velocity = new Velocity(this.velocity.getDX(), -this.velocity.getDY());
-            nextY = Math.max(top + this.radius, Math.min(nextY, bottom - this.radius));
+        CollisionInfo info = this.gameEnvironment.getClosestCollision(trajectory);
+
+        if (info == null) {
+            this.center = end;
+            return;
         }
 
-        this.center = new Point(nextX, nextY);
+        Point collisionPoint = info.collisionPoint();
+        Collidable obj = info.collisionObject();
+
+        Velocity newV = obj.hit(collisionPoint, this.velocity);
+
+        this.center = positionBeforeHit(collisionPoint, this.velocity, newV);
+        this.velocity = fixTinyDrift(newV);
+    }
+
+    // place the ball a bit before the hit point
+    private Point positionBeforeHit(Point collisionPoint,
+                                    Velocity oldV,
+                                    Velocity newV) {
+        double oldDx = oldV.getDX();
+        double oldDy = oldV.getDY();
+        double newDx = newV.getDX();
+        double newDy = newV.getDY();
+
+        double newX = collisionPoint.getX();
+        double newY = collisionPoint.getY();
+
+        if (oldDx != 0 && Math.signum(oldDx) != Math.signum(newDx)) {
+            newX = collisionPoint.getX() - Math.signum(oldDx) * this.radius;
+        }
+
+        if (oldDy != 0 && Math.signum(oldDy) != Math.signum(newDy)) {
+            newY = collisionPoint.getY() - Math.signum(oldDy) * this.radius;
+        }
+
+        return new Point(newX, newY);
+    }
+
+    // remove very small dx values
+    private Velocity fixTinyDrift(Velocity v) {
+        double dx = v.getDX();
+        double dy = v.getDY();
+        if (Math.abs(dx) < 0.001) {
+            dx = 0;
+        }
+        return new Velocity(dx, dy);
     }
 
     // פלטת צבעים גלובלית לכל הכדורים
@@ -109,4 +159,24 @@ public class Ball {
     public static Color getColorByIndex(int index) {
         return PALETTE[index % PALETTE.length];
     }
+
+    //for Ex2:
+    private GameEnvironment gameEnvironment;
+
+    public void setGameEnvironment(GameEnvironment env) {
+        this.gameEnvironment = env;
+    }
+
+    // Sprite: one step in time
+    @Override
+    public void timePassed() {
+        this.moveOneStep();
+    }
+
+    // add this ball to the game
+    public void addToGame(Game g) {
+        g.addSprite(this);
+    }
+
+
 }
