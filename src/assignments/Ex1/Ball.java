@@ -178,5 +178,4 @@ public class Ball implements Sprite {
         g.addSprite(this);
     }
 
-
 }

@@ -30,8 +30,6 @@ public class Block implements Collidable, Sprite {
         double dx = currentVelocity.getDX();
         double dy = currentVelocity.getDY();
 
-        double speed = Math.sqrt(dx * dx + dy * dy);
-
         double x1 = this.rect.getUpperLeft().getX();
         double y1 = this.rect.getUpperLeft().getY();
         double x2 = x1 + this.rect.getWidth();
@@ -40,20 +38,23 @@ public class Block implements Collidable, Sprite {
         boolean hitSides = false;
         boolean hitTopOrBottom = false;
 
+        double eps = 0.0001;
+
         // check left / right sides
-        if (collisionPoint.getX() == x1 || collisionPoint.getX() == x2) {
+        if (Math.abs(collisionPoint.getX() - x1) < eps
+                || Math.abs(collisionPoint.getX() - x2) < eps) {
             hitSides = true;
         }
 
         // check top / bottom sides
-        if (collisionPoint.getY() == y1 || collisionPoint.getY() == y2) {
+        if (Math.abs(collisionPoint.getY() - y1) < eps
+                || Math.abs(collisionPoint.getY() - y2) < eps) {
             hitTopOrBottom = true;
         }
 
         if (hitSides) {
             dx = -dx;
         }
-
         if (hitTopOrBottom) {
             dy = -dy;
         }
@@ -86,7 +87,5 @@ public class Block implements Collidable, Sprite {
         g.addCollidable(this);
         g.addSprite(this);
     }
-
-
 
 }

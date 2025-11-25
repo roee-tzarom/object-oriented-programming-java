@@ -32,74 +32,73 @@ public class Game {
         this.sprites.addSprite(s);
     }
 
-
     // Initialize a new game: create the Blocks and Ball (and Paddle)
-    // and add them to the game.
     public void initialize() {
-
-        // create window
-        this.gui = new GUI("Game", 800, 600);
-        this.sleeper = new Sleeper();
-        this.keyboard = this.gui.getKeyboardSensor();
-
-        // create ball in the middle
-        Ball ball = new Ball(400, 300, 5, Color.WHITE);
-        ball.setVelocity(new Velocity(3,3 ));
-        ball.setGameEnvironment(this.environment);
-        ball.addToGame(this);
-
         int width = 800;
         int height = 600;
         int borderSize = 20;
 
-        // all border block: top, bottom, left, right
-        Block top = new Block(new Rectangle(new Point(0, -borderSize), width, borderSize), Color.BLACK);
+        // window, sleeper, keyboard
+        this.gui = new GUI("Game", width, height);
+        this.sleeper = new Sleeper();
+        this.keyboard = this.gui.getKeyboardSensor();
+
+        // ball in the middle (black)
+        Ball ball = new Ball(width / 2.0, height / 2.0, 5, Color.BLACK);
+        ball.setVelocity(new Velocity(3, 3));
+        ball.setGameEnvironment(this.environment);
+        ball.addToGame(this);
+
+        // border blocks
+        Block top = new Block(
+                new Rectangle(new Point(0, 0), width, borderSize),
+                Color.DARK_GRAY);
         top.addToGame(this);
 
-        Block bottom = new Block(new Rectangle(new Point(0, height), width, borderSize), Color.BLACK);
+        Block bottom = new Block(
+                new Rectangle(new Point(0, height - borderSize), width, borderSize),
+                Color.DARK_GRAY);
         bottom.addToGame(this);
 
-        Block left = new Block(new Rectangle(new Point(-borderSize, 0), borderSize, height), Color.BLACK);
+        Block left = new Block(
+                new Rectangle(new Point(0, 0), borderSize, height),
+                Color.DARK_GRAY);
         left.addToGame(this);
 
-        Block right = new Block(new Rectangle(new Point(width, 0), borderSize, height), Color.BLACK);
+        Block right = new Block(
+                new Rectangle(new Point(width - borderSize, 0), borderSize, height),
+                Color.DARK_GRAY);
         right.addToGame(this);
 
-        // rows of blocks with random row colors
+        // rows of blocks (inside the borders)
         int rows = 4;
         int numBlocks = 10;
         double blockWidth = 70;
         double blockHeight = 20;
-        double startY = 90;
+        double startY = 70;     // a bit under the top border
         double rowGap = 30;
 
-        // color pool
         Color[] colors = {
-                Color.YELLOW,
-                Color.RED,
-                Color.BLUE,
-                Color.PINK,
                 Color.LIGHT_GRAY,
                 Color.ORANGE,
                 Color.GREEN,
-                Color.CYAN,
-                Color.MAGENTA,
+                Color.CYAN
         };
 
-        // gap so that left gap = gaps between blocks = right gap
-        double gap = (width - numBlocks * blockWidth) / (numBlocks + 1.0);
+        // available width between left and right borders
+        double innerWidth = width - 2.0 * borderSize;
 
-        // random start index in colors
+        // left gap = gaps between blocks = right gap
+        double gap = (innerWidth - numBlocks * blockWidth) / (numBlocks + 1.0);
+
         int startIndex = (int) (Math.random() * colors.length);
 
         for (int row = 0; row < rows; row++) {
             double y = startY + row * rowGap;
-
-            // color for this row: move one step in the array each row
             Color rowColor = colors[(startIndex + row) % colors.length];
 
             for (int i = 0; i < numBlocks; i++) {
-                double x = gap + i * (blockWidth + gap);
+                double x = borderSize + gap + i * (blockWidth + gap);
                 Block b = new Block(
                         new Rectangle(new Point(x, y), blockWidth, blockHeight),
                         rowColor);
@@ -107,13 +106,14 @@ public class Game {
             }
         }
 
-        // create paddle near the bottom
+        // paddle on the bottom bar
         int paddleWidth = 100;
         int paddleHeight = 15;
         int paddleSpeed = 8;
 
         Rectangle paddleRect = new Rectangle(
-                new Point((width - paddleWidth) / 2.0, height - 40),
+                new Point((width - paddleWidth) / 2.0,
+                        height - borderSize - paddleHeight),
                 paddleWidth, paddleHeight);
 
         Paddle paddle = new Paddle(
@@ -121,20 +121,25 @@ public class Game {
                 Color.WHITE,
                 this.keyboard,
                 paddleSpeed,
-                0,
-                width);
+                borderSize,
+                width - borderSize);
 
         paddle.addToGame(this);
-
     }
 
-    public void run(){
+    public void run() {
         int FPS = 60;
         int millisecondsPreFrame = 1000 / FPS;
-        while (true){
+
+        while (true) {
             long startTime = System.currentTimeMillis();
 
             DrawSurface d = this.gui.getDrawSurface();
+
+            // gray background
+            d.setColor(Color.LIGHT_GRAY);
+            d.fillRectangle(0, 0, 800, 600);
+
             this.sprites.drawAllOn(d);
             this.gui.show(d);
             this.sprites.notifyAllTimePassed();
@@ -146,6 +151,5 @@ public class Game {
                 this.sleeper.sleepFor(millisecondLeftToSleep);
             }
         }
-
     }
 }
