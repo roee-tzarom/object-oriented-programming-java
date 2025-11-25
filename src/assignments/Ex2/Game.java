@@ -79,10 +79,15 @@ public class Game {
         double rowGap = 30;
 
         Color[] colors = {
+                Color.YELLOW,
+                Color.RED,
+                Color.BLUE,
+                Color.PINK,
                 Color.LIGHT_GRAY,
                 Color.ORANGE,
                 Color.GREEN,
-                Color.CYAN
+                Color.CYAN,
+                Color.MAGENTA
         };
 
         // available width between left and right borders
