@@ -1,11 +1,13 @@
 package assignments.Ex2;
-import assignments.Ex1.*;
+
+import assignments.Ex1.Point;
+import assignments.Ex1.Line;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Rectangle {
+
     private Point upperLeft;
     private double width;
     private double height;
@@ -17,11 +19,54 @@ public class Rectangle {
         this.height = height;
     }
 
-    // --- Constructor ---
-    public Point getUpperLeft() {
-        return this.upperLeft;
+    // Return a (possibly empty) List of intersection points with the line.
+    public List<Point> intersectionPoints(Line line) {
+        List<Point> points = new ArrayList<Point>();
+
+        // 4 limits corners of the rectangle
+        double x1 = this.upperLeft.getX();
+        double y1 = this.upperLeft.getY();
+        double x2 = x1 + this.width;
+        double y2 = y1 + this.height;
+
+        Point topLeft = new Point(x1, y1);
+        Point topRight = new Point(x2, y1);
+        Point bottomLeft = new Point(x1, y2);
+        Point bottomRight = new Point(x2, y2);
+
+        // 4 sides lines
+        Line topEdge = new Line(topLeft, topRight);
+        Line bottomEdge = new Line(bottomLeft, bottomRight);
+        Line leftEdge = new Line(topLeft, bottomLeft);
+        Line rightEdge = new Line(topRight, bottomRight);
+
+        // for each edge, check if it intersects with the line
+        Point p;
+
+        p = line.intersectionWith(topEdge);
+        if (p != null) {
+            points.add(p);
+        }
+
+        p = line.intersectionWith(bottomEdge);
+        if (p != null) {
+            points.add(p);
+        }
+
+        p = line.intersectionWith(leftEdge);
+        if (p != null) {
+            points.add(p);
+        }
+
+        p = line.intersectionWith(rightEdge);
+        if (p != null) {
+            points.add(p);
+        }
+
+        return points;
     }
 
+    // Return the width and height of the rectangle
     public double getWidth() {
         return this.width;
     }
@@ -30,50 +75,8 @@ public class Rectangle {
         return this.height;
     }
 
-    // Return a (possibly empty) List of intersection points
-    // with the specified line.
-    public List<Point> intersectionPoints(Line line) {
-        List<Point> result  = new ArrayList<>();
-
-        // 4 values for rectangle corners
-        double x1 = this.upperLeft.getX();
-        double y1 = this.upperLeft.getY();
-        double x2 = x1 + this.width;
-        double y2 = y1 + this.height;
-
-        // create 4 lines for the rectangle edges
-        Line top = new Line(new Point(x1, y1), new Point(x2, y1));
-        Line bottom = new Line(new Point(x1, y2), new Point(x2, y2));
-        Line left = new Line(new Point(x1, y1), new Point(x1, y2));
-        Line right = new Line(new Point(x2, y1), new Point(x2, y2));
-
-        // check intersection with each edge
-        Point p;
-
-        p = line.intersectionWith(top);
-        if (p != null) {
-            result.add(p);
-        }
-
-        p = line.intersectionWith(bottom);
-        if (p != null) {
-            result.add(p);
-        }
-
-        p = line.intersectionWith(left);
-        if (p != null) {
-            result.add(p);
-        }
-
-        p = line.intersectionWith(right);
-        if (p != null) {
-            result.add(p);
-        }
-
-        return result;
-
+    // Returns the upper-left point of the rectangle.
+    public Point getUpperLeft() {
+        return this.upperLeft;
     }
-
-
-
 }

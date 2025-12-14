@@ -33,21 +33,29 @@ public class Game {
     }
 
     // Initialize a new game: create the Blocks and Ball (and Paddle)
+    // and add them to the game.
     public void initialize() {
         int width = 800;
         int height = 600;
         int borderSize = 20;
 
-        // window, sleeper, keyboard
+        // create window
         this.gui = new GUI("Game", width, height);
         this.sleeper = new Sleeper();
         this.keyboard = this.gui.getKeyboardSensor();
 
-        // ball in the middle (black)
-        Ball ball = new Ball(width / 2.0, height / 2.0, 5, Color.BLACK);
-        ball.setVelocity(new Velocity(3, 3));
-        ball.setGameEnvironment(this.environment);
-        ball.addToGame(this);
+        // balls in the middle
+        Ball ball1 = new Ball(width / 2.0 - 30, height / 2.0, 5, Color.WHITE);
+        Ball ball2 = new Ball(width / 2.0 + 30, height / 2.0 - 20, 5, Color.BLACK);
+
+        ball1.setVelocity(new Velocity(3, 3));
+        ball2.setVelocity(new Velocity(-4, 2));
+
+        ball1.setGameEnvironment(this.environment);
+        ball2.setGameEnvironment(this.environment);
+
+        ball1.addToGame(this);
+        ball2.addToGame(this);
 
         // border blocks
         Block top = new Block(
@@ -70,12 +78,12 @@ public class Game {
                 Color.DARK_GRAY);
         right.addToGame(this);
 
-        // rows of blocks (inside the borders)
+        // rows of blocks
         int rows = 4;
         int numBlocks = 10;
         double blockWidth = 70;
         double blockHeight = 20;
-        double startY = 70;     // a bit under the top border
+        double startY = 70;
         double rowGap = 30;
 
         Color[] colors = {
@@ -87,19 +95,22 @@ public class Game {
                 Color.ORANGE,
                 Color.GREEN,
                 Color.CYAN,
-                Color.MAGENTA
+                Color.MAGENTA,
         };
 
         // available width between left and right borders
         double innerWidth = width - 2.0 * borderSize;
 
-        // left gap = gaps between blocks = right gap
+        // gap so that left gap = gaps between blocks = right gap
         double gap = (innerWidth - numBlocks * blockWidth) / (numBlocks + 1.0);
 
+        // random start index in colors
         int startIndex = (int) (Math.random() * colors.length);
 
         for (int row = 0; row < rows; row++) {
             double y = startY + row * rowGap;
+
+            // color for this row: move one step in the array each row
             Color rowColor = colors[(startIndex + row) % colors.length];
 
             for (int i = 0; i < numBlocks; i++) {
@@ -111,7 +122,7 @@ public class Game {
             }
         }
 
-        // paddle on the bottom bar
+        // create paddle on the bottom border (on the gray bar)
         int paddleWidth = 100;
         int paddleHeight = 15;
         int paddleSpeed = 8;
@@ -132,11 +143,10 @@ public class Game {
         paddle.addToGame(this);
     }
 
-    public void run() {
+    public void run(){
         int FPS = 60;
         int millisecondsPreFrame = 1000 / FPS;
-
-        while (true) {
+        while (true){
             long startTime = System.currentTimeMillis();
 
             DrawSurface d = this.gui.getDrawSurface();
@@ -156,5 +166,6 @@ public class Game {
                 this.sleeper.sleepFor(millisecondLeftToSleep);
             }
         }
+
     }
 }

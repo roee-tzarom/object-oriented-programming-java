@@ -94,9 +94,12 @@ public class Paddle implements Sprite, Collidable {
         double x1 = this.rect.getUpperLeft().getX();
         double y1 = this.rect.getUpperLeft().getY();
         double width = this.rect.getWidth();
+        double height = this.rect.getHeight();
+
+        double eps = 0.0001;
 
         // hit on the top side: use 5 regions
-        if (collisionPoint.getY() == y1) {
+        if (Math.abs(collisionPoint.getY() - y1) < eps) {
             double regionWidth = width / 5.0;
             double hitX = collisionPoint.getX();
             int region = (int) ((hitX - x1) / regionWidth); // 0..4
@@ -125,10 +128,21 @@ public class Paddle implements Sprite, Collidable {
             return Velocity.fromAngleAndSpeed(angle, speed);
         }
 
-        // hit from left or right side: reverse dx
         double xLeft = x1;
         double xRight = x1 + width;
-        if (collisionPoint.getX() == xLeft || collisionPoint.getX() == xRight) {
+        double yBottom = y1 + height;
+
+        // hit from left side
+        if (Math.abs(collisionPoint.getX() - xLeft) < eps
+                && collisionPoint.getY() >= y1
+                && collisionPoint.getY() <= yBottom) {
+            dx = -dx;
+        }
+
+        // hit from right side
+        if (Math.abs(collisionPoint.getX() - xRight) < eps
+                && collisionPoint.getY() >= y1
+                && collisionPoint.getY() <= yBottom) {
             dx = -dx;
         }
 

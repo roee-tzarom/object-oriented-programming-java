@@ -58,7 +58,7 @@ public class Ball implements Sprite {
         this.velocity = new Velocity(dx, dy);
     }
 
-    //פונקציה שמשנה את הגבולות (כשהכדור נוצר במסגרת אחרת)
+    //שינוי טווח הגבולות שהכדור יכול להיות (למסגרת במקרה הצורך)
     public void setBounds(int left, int right, int top, int bottom) {
         this.left = left;
         this.right = right;
@@ -73,18 +73,18 @@ public class Ball implements Sprite {
     }
 
     public void moveOneStep() {
-        // no game environment → old frame logic (Ex1)
         if (this.gameEnvironment == null) {
+
+
+
             double nextX = this.center.getX() + this.velocity.getDX();
             double nextY = this.center.getY() + this.velocity.getDY();
 
-            // bounce from left / right borders
             if (nextX + this.radius > right || nextX - this.radius < left) {
                 this.velocity = new Velocity(-this.velocity.getDX(), this.velocity.getDY());
                 nextX = Math.max(left + this.radius, Math.min(nextX, right - this.radius));
             }
 
-            // bounce from top / bottom borders
             if (nextY + this.radius > bottom || nextY - this.radius < top) {
                 this.velocity = new Velocity(this.velocity.getDX(), -this.velocity.getDY());
                 nextY = Math.max(top + this.radius, Math.min(nextY, bottom - this.radius));
@@ -94,7 +94,6 @@ public class Ball implements Sprite {
             return;
         }
 
-        // with game environment → collision logic (Ex2)
         Point start = this.center;
         Point end = this.velocity.applyToPoint(this.center);
         Line trajectory = new Line(start, end);

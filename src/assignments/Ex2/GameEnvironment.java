@@ -1,6 +1,7 @@
 package assignments.Ex2;
 
-import assignments.Ex1.*;
+import assignments.Ex1.Line;
+import assignments.Ex1.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,6 @@ public class GameEnvironment {
 
     private List<Collidable> collidables;
 
-    // create empty environment
     public GameEnvironment() {
         this.collidables = new ArrayList<Collidable>();
     }
@@ -22,24 +22,23 @@ public class GameEnvironment {
 
     // Assume an object moving from line.start() to line.end().
     // If this object will not collide with any of the collidables
-    // in this collection, return null. Else, return the information
-    // about the closest collision that is going to occur.
+    // in this collection, return null.
+    // Else, return the information about the closest collision.
     public CollisionInfo getClosestCollision(Line trajectory) {
-
         Point closestPoint = null;
-        Collidable closestObject = null;
+        Collidable closestCollidable = null;
         double minDist = Double.POSITIVE_INFINITY;
 
         for (Collidable c : this.collidables) {
-            Rectangle rect = c.getCollisionRectangle();
-            Point p = trajectory.closestIntersectionToStartOfLine(rect);
+            assignments.Ex2.Rectangle r = c.getCollisionRectangle();
+            Point p = trajectory.closestIntersectionToStartOfLine(r);
 
             if (p != null) {
                 double d = trajectory.start().distance(p);
                 if (d < minDist) {
                     minDist = d;
                     closestPoint = p;
-                    closestObject = c;
+                    closestCollidable = c;
                 }
             }
         }
@@ -48,8 +47,6 @@ public class GameEnvironment {
             return null;
         }
 
-        return new CollisionInfo(closestPoint, closestObject);
+        return new CollisionInfo(closestPoint, closestCollidable);
     }
-
-
 }

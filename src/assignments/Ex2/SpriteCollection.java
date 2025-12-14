@@ -1,10 +1,10 @@
 package assignments.Ex2;
 
 import biuoop.DrawSurface;
-
 import java.util.ArrayList;
 import java.util.List;
 
+// holds all sprites in the game
 public class SpriteCollection {
 
     private List<Sprite> sprites;
@@ -19,7 +19,9 @@ public class SpriteCollection {
 
     // call timePassed() on all sprites.
     public void notifyAllTimePassed() {
-        for (Sprite s : this.sprites) {
+        // create copy to avoid problems
+        List<Sprite> copy = new ArrayList<Sprite>(this.sprites);
+        for (Sprite s : copy) {
             s.timePassed();
         }
     }

@@ -55,6 +55,7 @@ public class Block implements Collidable, Sprite {
         if (hitSides) {
             dx = -dx;
         }
+
         if (hitTopOrBottom) {
             dy = -dy;
         }
