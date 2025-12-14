@@ -1,4 +1,4 @@
-package assignments.Ex1.Test;
+package assignments.Ex2;
 
 import assignments.Ex1.Line;
 import assignments.Ex1.Point;

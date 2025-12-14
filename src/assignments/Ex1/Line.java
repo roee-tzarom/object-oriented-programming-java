@@ -1,5 +1,7 @@
 package assignments.Ex1;
 
+import assignments.Ex2.Rectangle;
+
 public class Line {
     private Point start;
     private Point end;
@@ -84,7 +86,7 @@ public class Line {
     }
 
     // return closest intersection point with this rectangle to the start point
-    public Point closestIntersectionToStartOfLine(assignments.Ex2.Rectangle rect) {
+    public Point closestIntersectionToStartOfLine(Rectangle rect) {
         // get all intersection points with this line
         java.util.List<Point> points = rect.intersectionPoints(this);
 

@@ -30,7 +30,7 @@ public class GameEnvironment {
         double minDist = Double.POSITIVE_INFINITY;
 
         for (Collidable c : this.collidables) {
-            assignments.Ex2.Rectangle r = c.getCollisionRectangle();
+            Rectangle r = c.getCollisionRectangle();
             Point p = trajectory.closestIntersectionToStartOfLine(r);
 
             if (p != null) {
@@ -49,4 +49,9 @@ public class GameEnvironment {
 
         return new CollisionInfo(closestPoint, closestCollidable);
     }
+
+    public void removeCollidable(Collidable c) {
+        this.collidables.remove(c);
+    }
+
 }

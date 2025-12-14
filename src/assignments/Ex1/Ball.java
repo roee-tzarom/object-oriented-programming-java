@@ -1,13 +1,8 @@
 package assignments.Ex1;
 
+import assignments.Ex2.*;
 import biuoop.DrawSurface;
 import java.awt.Color;
-
-import assignments.Ex2.GameEnvironment;
-import assignments.Ex2.CollisionInfo;
-import assignments.Ex2.Collidable;
-import assignments.Ex2.Sprite;
-import assignments.Ex2.Game;
 
 
 public class Ball implements Sprite {
@@ -108,7 +103,7 @@ public class Ball implements Sprite {
         Point collisionPoint = info.collisionPoint();
         Collidable obj = info.collisionObject();
 
-        Velocity newV = obj.hit(collisionPoint, this.velocity);
+        Velocity newV = obj.hit(this, collisionPoint, this.velocity);
 
         this.center = positionBeforeHit(collisionPoint, this.velocity, newV);
         this.velocity = fixTinyDrift(newV);

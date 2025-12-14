@@ -1,16 +1,13 @@
 package assignments.Ex2;
 
-import assignments.Ex1.Point;
-import assignments.Ex1.Velocity;
+import assignments.Ex1.*;
+import assignments.Ex3.HitListener;
+import assignments.Ex3.HitNotifier;
 
-// things that the ball can hit
 public interface Collidable {
-
-    // Return the "collision shape" of the object.
+    // collision shape
     Rectangle getCollisionRectangle();
 
-    // Notify the object that we collided with it at collisionPoint
-    // with a given velocity.
-    // Return the new velocity after the hit.
-    Velocity hit(Point collisionPoint, Velocity currentVelocity);
+    // new hit: we also get the ball that hits
+    Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity);
 }

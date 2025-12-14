@@ -32,4 +32,9 @@ public class SpriteCollection {
             s.drawOn(d);
         }
     }
+
+    public void removeSprite(Sprite s) {
+        this.sprites.remove(s);
+    }
+
 }

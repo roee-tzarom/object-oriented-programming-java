@@ -1,21 +1,28 @@
 package assignments.Ex2;
 
 import assignments.Ex1.*;
+import assignments.Ex3.HitListener;
+import assignments.Ex3.HitNotifier;
 
 import biuoop.DrawSurface;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 // a block that can be hit
-public class Block implements Collidable, Sprite {
+public class Block implements Collidable, Sprite, HitNotifier {
 
     private Rectangle rect;
     private Color color;
+    private List<HitListener> hitListeners;
 
 
     // create a block with a given rectangle and color
     public Block(Rectangle rect, Color color) {
         this.rect = rect;
         this.color = color;
+        this.hitListeners = new ArrayList<HitListener>();
+
     }
 
     // return the block rectangle
@@ -26,7 +33,7 @@ public class Block implements Collidable, Sprite {
 
     // change velocity when the ball hits this block
     @Override
-    public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
+    public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
         double dx = currentVelocity.getDX();
         double dy = currentVelocity.getDY();
 
@@ -38,17 +45,13 @@ public class Block implements Collidable, Sprite {
         boolean hitSides = false;
         boolean hitTopOrBottom = false;
 
-        double eps = 0.0001;
-
         // check left / right sides
-        if (Math.abs(collisionPoint.getX() - x1) < eps
-                || Math.abs(collisionPoint.getX() - x2) < eps) {
+        if (collisionPoint.getX() == x1 || collisionPoint.getX() == x2) {
             hitSides = true;
         }
 
         // check top / bottom sides
-        if (Math.abs(collisionPoint.getY() - y1) < eps
-                || Math.abs(collisionPoint.getY() - y2) < eps) {
+        if (collisionPoint.getY() == y1 || collisionPoint.getY() == y2) {
             hitTopOrBottom = true;
         }
 
@@ -60,7 +63,12 @@ public class Block implements Collidable, Sprite {
             dy = -dy;
         }
 
-        return new Velocity(dx, dy);
+        Velocity newV = new Velocity(dx, dy);
+
+        // notify listeners that this block was hit
+        this.notifyHit(hitter);
+
+        return newV;
     }
 
     // draw the block
@@ -89,4 +97,27 @@ public class Block implements Collidable, Sprite {
         g.addSprite(this);
     }
 
+    // remove this block from the game
+    public void removeFromGame(Game g) {
+        g.removeCollidable(this);
+        g.removeSprite(this);
+    }
+
+    @Override
+    public void addHitListener(HitListener hl) {
+        this.hitListeners.add(hl);
+    }
+
+    @Override
+    public void removeHitListener(HitListener hl) {
+        this.hitListeners.remove(hl);
+    }
+    // notify all listeners that this block was hit
+    private void notifyHit(Ball hitter) {
+        // copy list so it won't change while we loop
+        List<HitListener> listeners = new ArrayList<HitListener>(this.hitListeners);
+        for (HitListener hl : listeners) {
+            hl.hitEvent(this, hitter);
+        }
+    }
 }

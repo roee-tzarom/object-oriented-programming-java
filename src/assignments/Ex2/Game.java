@@ -1,12 +1,9 @@
 package assignments.Ex2;
 
+import assignments.Ex1.*;
 import biuoop.GUI;
 import biuoop.DrawSurface;
 import biuoop.Sleeper;
-
-import assignments.Ex1.Ball;
-import assignments.Ex1.Point;
-import assignments.Ex1.Velocity;
 
 import java.awt.Color;
 import biuoop.KeyboardSensor;
@@ -30,6 +27,14 @@ public class Game {
 
     public void addSprite(Sprite s) {
         this.sprites.addSprite(s);
+    }
+
+    public void removeCollidable(Collidable c) {
+        this.environment.removeCollidable(c);
+    }
+
+    public void removeSprite(Sprite s) {
+        this.sprites.removeSprite(s);
     }
 
     // Initialize a new game: create the Blocks and Ball (and Paddle)
