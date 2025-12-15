@@ -3,6 +3,7 @@ package assignments.Ex2;
 import assignments.Ex1.*;
 import assignments.Ex3.Counter;
 import assignments.Ex3.BlockRemover;
+import assignments.Ex3.BallRemover;
 
 import biuoop.GUI;
 import biuoop.DrawSurface;
@@ -17,7 +18,8 @@ public class Game {
     private GameEnvironment environment;
     private GUI gui;
     private Sleeper sleeper;
-    private Counter remainingBlocks;
+    private Counter countBlocks;
+    private Counter countBalls;
 
 
     public Game() {
@@ -66,6 +68,10 @@ public class Game {
         ball1.addToGame(this);
         ball2.addToGame(this);
 
+        // balls counter and remover
+        this.countBalls = new Counter(2);
+        BallRemover ballRemover = new BallRemover(this, this.countBalls);
+
         // border blocks
         Block top = new Block(
                 new Rectangle(new Point(0, 0), width, borderSize),
@@ -76,6 +82,7 @@ public class Game {
                 new Rectangle(new Point(0, height - borderSize), width, borderSize),
                 Color.DARK_GRAY);
         bottom.addToGame(this);
+        bottom.addHitListener(ballRemover); // death region block
 
         Block left = new Block(
                 new Rectangle(new Point(0, 0), borderSize, height),
@@ -87,6 +94,7 @@ public class Game {
                 Color.DARK_GRAY);
         right.addToGame(this);
 
+
         // rows of blocks
         int rows = 4;
         int numBlocks = 10;
@@ -97,11 +105,10 @@ public class Game {
 
         // count only the "real" blocks (the colored rows)
         int totalBlocks = rows * numBlocks;
-        this.remainingBlocks = new Counter(totalBlocks);
+        this.countBlocks = new Counter(totalBlocks);
 
         // remover that will remove blocks and update the counter
-        BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
-
+        BlockRemover blockRemover = new BlockRemover(this, this.countBlocks);
 
         Color[] colors = {
                 Color.YELLOW,
@@ -180,7 +187,13 @@ public class Game {
             this.sprites.notifyAllTimePassed();
 
             // stop the game when no more blocks
-            if (this.remainingBlocks != null && this.remainingBlocks.getValue() == 0) {
+            if (this.countBlocks != null && this.countBlocks.getValue() == 0) {
+                this.gui.close();
+                return;
+            }
+
+            // stop the game when no more balls
+            if (this.countBalls != null && this.countBalls.getValue() == 0) {
                 this.gui.close();
                 return;
             }

@@ -7,11 +7,11 @@ import assignments.Ex2.Game;
 public class BlockRemover implements HitListener {
 
     private Game game;
-    private Counter remainingBlocks;
+    private Counter countBlocks;
 
-    public BlockRemover(Game game, Counter remainingBlocks) {
+    public BlockRemover(Game game, Counter countBlocks) {
         this.game = game;
-        this.remainingBlocks = remainingBlocks;
+        this.countBlocks = countBlocks;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class BlockRemover implements HitListener {
         beingHit.removeFromGame(this.game);
 
         // update counter
-        this.remainingBlocks.decrease(1);
+        this.countBlocks.decrease(1);
 
         // no need to listen to this block anymore
         beingHit.removeHitListener(this);
