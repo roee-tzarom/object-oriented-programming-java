@@ -1,12 +1,14 @@
 package assignments.Ex2;
 
 import assignments.Ex1.*;
+import assignments.Ex3.Counter;
+import assignments.Ex3.BlockRemover;
+
 import biuoop.GUI;
 import biuoop.DrawSurface;
 import biuoop.Sleeper;
-
-import java.awt.Color;
 import biuoop.KeyboardSensor;
+import java.awt.Color;
 
 public class Game {
 
@@ -15,6 +17,8 @@ public class Game {
     private GameEnvironment environment;
     private GUI gui;
     private Sleeper sleeper;
+    private Counter remainingBlocks;
+
 
     public Game() {
         this.sprites = new SpriteCollection();
@@ -91,6 +95,14 @@ public class Game {
         double startY = 70;
         double rowGap = 30;
 
+        // count only the "real" blocks (the colored rows)
+        int totalBlocks = rows * numBlocks;
+        this.remainingBlocks = new Counter(totalBlocks);
+
+        // remover that will remove blocks and update the counter
+        BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
+
+
         Color[] colors = {
                 Color.YELLOW,
                 Color.RED,
@@ -124,6 +136,9 @@ public class Game {
                         new Rectangle(new Point(x, y), blockWidth, blockHeight),
                         rowColor);
                 b.addToGame(this);
+
+                // block removal listener
+                b.addHitListener(blockRemover);
             }
         }
 
@@ -163,6 +178,12 @@ public class Game {
             this.sprites.drawAllOn(d);
             this.gui.show(d);
             this.sprites.notifyAllTimePassed();
+
+            // stop the game when no more blocks
+            if (this.remainingBlocks != null && this.remainingBlocks.getValue() == 0) {
+                this.gui.close();
+                return;
+            }
 
             long usedTime = System.currentTimeMillis() - startTime;
             long millisecondLeftToSleep = millisecondsPreFrame - usedTime;
