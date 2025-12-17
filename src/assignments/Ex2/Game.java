@@ -24,7 +24,6 @@ public class Game {
     private Counter countBalls;
     private Counter score;
 
-
     public Game() {
         this.sprites = new SpriteCollection();
         this.environment = new GameEnvironment();
@@ -53,10 +52,16 @@ public class Game {
         int height = 600;
         int borderSize = 20;
 
-        // create window
-        this.gui = new GUI("Game", width, height);
-        this.sleeper = new Sleeper();
-        this.keyboard = this.gui.getKeyboardSensor();
+        // create window only once
+        if (this.gui == null) {
+            this.gui = new GUI("Game", width, height);
+            this.sleeper = new Sleeper();
+            this.keyboard = this.gui.getKeyboardSensor();
+        }
+
+        // reset state for new game
+        this.sprites = new SpriteCollection();
+        this.environment = new GameEnvironment();
 
         // score counter and score listener
         this.score = new Counter(0);
@@ -178,7 +183,7 @@ public class Game {
 
         paddle.addToGame(this);
 
-        // score bar on top, drawn last so it will be on top of the border
+        // score bar on top
         ScoreIndicator scoreIndicator =
                 new ScoreIndicator(this.score, 0, 0, width, 20);
         this.addSprite(scoreIndicator);
@@ -188,158 +193,163 @@ public class Game {
         int FPS = 60;
         int millisecondsPerFrame = 1000 / FPS;
 
-        // game start time
-        long gameStartTime = System.currentTimeMillis();
-
+        // outer loop: play again in the same window
         while (true) {
-            long startTime = System.currentTimeMillis();
 
+            boolean started = false;
+            long gameStartTime = 0;
+
+            // inner loop: single game
+            while (true) {
+                long startTime = System.currentTimeMillis(); // frame start time
+
+                DrawSurface d = this.gui.getDrawSurface();
+
+                // background
+                d.setColor(Color.LIGHT_GRAY);
+                d.fillRectangle(0, 0, 800, 600);
+
+                // draw all game objects
+                this.sprites.drawAllOn(d);
+
+                // wait for first paddle move
+                if (!started) {
+                    d.setColor(Color.BLACK);
+                    d.drawText(200, 320,
+                            "Move the paddle (LEFT or RIGHT) to start", 22);
+
+                    this.gui.show(d);
+
+                    // start only when player moves the paddle
+                    if (this.keyboard.isPressed(KeyboardSensor.LEFT_KEY)
+                            || this.keyboard.isPressed(KeyboardSensor.RIGHT_KEY)) {
+                        started = true;
+                        gameStartTime = System.currentTimeMillis();
+                    }
+
+                    long usedTimeWait = System.currentTimeMillis() - startTime;
+                    long msLeftWait = millisecondsPerFrame - usedTimeWait;
+                    if (msLeftWait > 0) {
+                        this.sleeper.sleepFor(msLeftWait);
+                    }
+                    continue; // do not move sprites yet
+                }
+
+                // game is running: show and update sprites
+                this.gui.show(d);
+                this.sprites.notifyAllTimePassed();
+
+                long elapsedMillis = System.currentTimeMillis() - gameStartTime;
+                double elapsedSeconds = elapsedMillis / 1000.0;
+
+                // win: no more blocks
+                if (this.countBlocks != null && this.countBlocks.getValue() == 0) {
+                    if (this.score != null) {
+                        this.score.increase(100); // win bonus
+                    }
+
+                    boolean playAgain = showEndScreen(
+                            true, this.score.getValue(), elapsedSeconds);
+
+                    if (playAgain) {
+                        this.initialize(); // new game in same window
+                        break;             // break inner loop
+                    } else {
+                        this.gui.close();
+                        return;
+                    }
+                }
+
+                // lose: no more balls
+                if (this.countBalls != null && this.countBalls.getValue() == 0) {
+
+                    boolean playAgain = showEndScreen(
+                            false, this.score.getValue(), elapsedSeconds);
+
+                    if (playAgain) {
+                        this.initialize(); // new game in same window
+                        break;             // break inner loop
+                    } else {
+                        this.gui.close();
+                        return;
+                    }
+                }
+
+                // keep constant FPS
+                long usedTime = System.currentTimeMillis() - startTime;
+                long millisecondLeftToSleep = millisecondsPerFrame - usedTime;
+                if (millisecondLeftToSleep > 0) {
+                    this.sleeper.sleepFor(millisecondLeftToSleep);
+                }
+            }
+            // loop again: new game already initialized
+        }
+    }
+
+    // extra end screen (added by ChatGPT, not part of the required assignment)
+    private boolean showEndScreen(boolean win, int score, double timeSeconds) {
+        while (true) {
             DrawSurface d = this.gui.getDrawSurface();
 
-            // gray background
-            d.setColor(Color.LIGHT_GRAY);
-            d.fillRectangle(0, 0, 800, 600);
+            int width = d.getWidth();
+            int height = d.getHeight();
 
-            this.sprites.drawAllOn(d);
-            this.gui.show(d);
-            this.sprites.notifyAllTimePassed();
-
-            // win: no more blocks, still have balls
-            if (this.countBlocks != null && this.countBlocks.getValue() == 0) {
-                if (this.score != null) {
-                    this.score.increase(100); // bonus for clearing all blocks
+            // background stripes
+            int stripeH = 40;
+            for (int i = 0; i < height / stripeH + 2; i++) {
+                if (win) {
+                    d.setColor(i % 2 == 0
+                            ? new Color(30, 144, 255)
+                            : new Color(0, 0, 80));
+                } else {
+                    d.setColor(i % 2 == 0
+                            ? new Color(90, 0, 0)
+                            : new Color(20, 0, 0));
                 }
-                long elapsed = System.currentTimeMillis() - gameStartTime;
-                showEndScreen(true, elapsed);
-                this.gui.close();
-                return;
-            }
-
-            // lose: no more balls
-            if (this.countBalls != null && this.countBalls.getValue() == 0) {
-                long elapsed = System.currentTimeMillis() - gameStartTime;
-                showEndScreen(false, elapsed);
-                this.gui.close();
-                return;
-            }
-
-            long usedTime = System.currentTimeMillis() - startTime;
-            long millisecondLeftToSleep = millisecondsPerFrame - usedTime;
-
-            if (millisecondLeftToSleep > 0) {
-                this.sleeper.sleepFor(millisecondLeftToSleep);
-            }
-        }
-    }
-
-    // show final screen with win/lose, score and time (Created by chatGPT just for decoration)
-    private void showEndScreen(boolean win, long elapsedMillis) {
-        double seconds = elapsedMillis / 1000.0;
-
-        DrawSurface d = this.gui.getDrawSurface();
-
-        if (win) {
-            // ---- WIN SCREEN ----
-
-            // background stripes (blue + gold)
-            Color[] bg = {
-                    new Color(3, 4, 94),     // deep blue
-                    new Color(0, 119, 182),  // medium blue
-                    new Color(0, 180, 216),  // light blue
-                    new Color(250, 204, 21)  // gold
-            };
-
-            int stripeWidth = 100;
-            for (int i = 0; i < 8; i++) {
-                d.setColor(bg[i % bg.length]);
-                d.fillRectangle(i * stripeWidth, 0, stripeWidth, 600);
+                d.fillRectangle(0, i * stripeH, width, stripeH);
             }
 
             // center panel
-            d.setColor(new Color(10, 10, 30));
-            d.fillRectangle(120, 170, 560, 260);
+            int panelW = 500;
+            int panelH = 260;
+            int panelX = (width - panelW) / 2;
+            int panelY = (height - panelH) / 2;
 
-            d.setColor(new Color(250, 204, 21)); // gold frame
-            d.drawRectangle(120, 170, 560, 260);
+            d.setColor(Color.DARK_GRAY);
+            d.fillRectangle(panelX, panelY, panelW, panelH);
+            d.setColor(Color.WHITE);
+            d.drawRectangle(panelX, panelY, panelW, panelH);
 
-            // small "sparkles"
-            java.util.Random rand = new java.util.Random();
-            for (int i = 0; i < 40; i++) {
-                int x = 130 + rand.nextInt(540);
-                int y = 180 + rand.nextInt(240);
-                d.setColor(new Color(255, 255, 255));
-                d.fillCircle(x, y, 2);
+            // title
+            String title = win ? "YOU WIN!" : "GAME OVER";
+            d.drawText(panelX + 80, panelY + 60, title, 48);
+
+            // score + time
+            d.drawText(panelX + 40, panelY + 110, "Score: " + score, 26);
+            d.drawText(panelX + 40, panelY + 145,
+                    String.format("Time: %.1f sec", timeSeconds), 26);
+
+            // message
+            String msg = win ? "Great job! :)" : "It's ok, try again :)";
+            d.drawText(panelX + 40, panelY + 185, msg, 24);
+
+            // instructions
+            d.drawText(panelX + 40, panelY + 220,
+                    "Press ENTER to play again, SPACE to quit", 20);
+
+            this.gui.show(d);
+
+            // ENTER -> play again
+            if (this.keyboard.isPressed("enter")) {
+                return true;
+            }
+            // SPACE -> quit (works גם כשהמקלדת על עברית)
+            if (this.keyboard.isPressed("space")) {
+                return false;
             }
 
-            int scoreValue = (this.score != null) ? this.score.getValue() : 0;
-
-            // title with simple shadow
-            String title = "YOU WIN!";
-            d.setColor(Color.BLACK);
-            d.drawText(203, 230, title, 40);
-            d.setColor(new Color(250, 250, 250));
-            d.drawText(200, 227, title, 40);
-
-            String scoreText = "Score: " + scoreValue;
-            String timeText = "Time: " + String.format("%.1f", seconds) + " sec";
-
-            d.setColor(new Color(250, 250, 250));
-            d.drawText(220, 280, scoreText, 28);
-            d.drawText(220, 320, timeText, 28);
-            d.drawText(220, 370, "Great job! :)", 24);
-
-        } else {
-            // ---- LOSE SCREEN ----
-
-            // dark red / black gradient-like stripes
-            Color[] bg = {
-                    new Color(50, 0, 0),
-                    new Color(90, 0, 0),
-                    new Color(20, 0, 0),
-                    new Color(0, 0, 0)
-            };
-
-            int stripeHeight = 60;
-            for (int i = 0; i < 10; i++) {
-                d.setColor(bg[i % bg.length]);
-                d.fillRectangle(0, i * stripeHeight, 800, stripeHeight);
-            }
-
-            // center panel
-            d.setColor(new Color(15, 0, 0));
-            d.fillRectangle(120, 170, 560, 260);
-
-            d.setColor(new Color(200, 50, 50)); // red frame
-            d.drawRectangle(120, 170, 560, 260);
-
-            // "broken" circles to give feeling of shards
-            java.util.Random rand = new java.util.Random();
-            for (int i = 0; i < 35; i++) {
-                int x = 130 + rand.nextInt(540);
-                int y = 180 + rand.nextInt(240);
-                d.setColor(new Color(120, 0, 0));
-                d.fillCircle(x, y, 3);
-            }
-
-            int scoreValue = (this.score != null) ? this.score.getValue() : 0;
-
-            // title with simple shadow
-            String title = "GAME OVER";
-            d.setColor(Color.BLACK);
-            d.drawText(203, 230, title, 40);
-            d.setColor(new Color(255, 230, 230));
-            d.drawText(200, 227, title, 40);
-
-            String scoreText = "Score: " + scoreValue;
-            String timeText = "Time: " + String.format("%.1f", seconds) + " sec";
-
-            d.setColor(new Color(255, 230, 230));
-            d.drawText(220, 280, scoreText, 28);
-            d.drawText(220, 320, timeText, 28);
-            d.drawText(220, 370, "It's ok, try again :)", 24);
+            this.sleeper.sleepFor(30);
         }
-
-        this.gui.show(d);
-        this.sleeper.sleepFor(3000);
     }
+
 }
