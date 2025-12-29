@@ -1,9 +1,7 @@
-import assignments.Ex2.Game;
+import assignments.Ex2.Ass2Game;
 
 public class Ass3Game {
     public static void main(String[] args) {
-        Game game = new Game();
-        game.initialize();
-        game.run();
+        Ass2Game.main(new String[0]);
     }
 }

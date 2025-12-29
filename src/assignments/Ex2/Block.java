@@ -16,6 +16,43 @@ public class Block implements Collidable, Sprite, HitNotifier {
     private Color color;
     private List<HitListener> hitListeners;
 
+    private static final Color[] PALETTE = new Color[] {
+            Color.YELLOW,
+            Color.RED,
+            Color.BLUE,
+            Color.PINK,
+            Color.LIGHT_GRAY,
+            Color.ORANGE,
+            Color.GREEN,
+            Color.CYAN,
+            Color.MAGENTA,
+            new Color(128, 0, 128),     // Purple
+            new Color(255, 105, 180),   // Hot Pink
+            new Color(255, 165, 0),     // Vivid Orange
+            new Color(0, 128, 128),     // Teal
+            new Color(0, 191, 255),     // Deep Sky Blue
+            new Color(46, 139, 87),     // Sea Green
+            new Color(218, 112, 214),   // Orchid
+            new Color(255, 215, 0),     // Gold
+            new Color(205, 92, 92),     // Indian Red
+            new Color(70, 130, 180),    // Steel Blue
+            new Color(154, 205, 50)     // Yellow Green
+    };
+
+    public static Color[] getRandomColors(int count) {
+        if (count <= 0) {
+            return new Color[0];
+        }
+
+        Color[] result = new Color[count];
+        int startIndex = (int) (Math.random() * PALETTE.length);
+
+        for (int i = 0; i < count; i++) {
+            result[i] = PALETTE[(startIndex + i) % PALETTE.length];
+        }
+
+        return result;
+    }
 
     // create a block with a given rectangle and color
     public Block(Rectangle rect, Color color) {
@@ -92,13 +129,13 @@ public class Block implements Collidable, Sprite, HitNotifier {
     }
 
     // add this block to the game
-    public void addToGame(Game g) {
+    public void addToGame(GameLevel g) {
         g.addCollidable(this);
         g.addSprite(this);
     }
 
     // remove this block from the game
-    public void removeFromGame(Game g) {
+    public void removeFromGame(GameLevel g) {
         g.removeCollidable(this);
         g.removeSprite(this);
     }

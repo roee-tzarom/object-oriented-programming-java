@@ -2,16 +2,16 @@ package assignments.Ex3;
 
 import assignments.Ex1.Ball;
 import assignments.Ex2.Block;
-import assignments.Ex2.Game;
+import assignments.Ex2.GameLevel;
 
 public class BallRemover implements HitListener {
 
-    private Game game;
+    private GameLevel gameLevel;
     public Counter countBalls;
 
-    public BallRemover(Game game, Counter countBalls) {
+    public BallRemover(GameLevel gameLevel, Counter countBalls) {
 
-        this.game = game;
+        this.gameLevel = gameLevel;
         this.countBalls = countBalls;
     }
 
@@ -19,7 +19,7 @@ public class BallRemover implements HitListener {
     public void hitEvent(Block beingHit, Ball hitter) {
 
         // remove ball from the game
-        hitter.removeFromGame(this.game);
+        hitter.removeFromGame(this.gameLevel);
 
         //update counter
         this.countBalls.decrease(1);

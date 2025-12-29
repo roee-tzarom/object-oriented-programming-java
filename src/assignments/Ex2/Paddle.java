@@ -135,7 +135,7 @@ public class Paddle implements Sprite, Collidable {
     }
 
     // Add this paddle to the game.
-    public void addToGame(Game g) {
+    public void addToGame(GameLevel g) {
         g.addCollidable(this);
         g.addSprite(this);
     }
