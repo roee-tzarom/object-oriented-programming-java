@@ -1,10 +1,12 @@
-package assignments.Ex4;
+package assignments.Ex4.Levels;
 
 import assignments.Ex1.Point;
 import assignments.Ex1.Velocity;
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
+import assignments.Ex4.LevelInformation;
+import assignments.Ex4.WideEasyBackground;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class WideEasy implements LevelInformation {
 
     @Override
     public int paddleSpeed() {
-        return 4;
+        return 6;
     }
 
     @Override

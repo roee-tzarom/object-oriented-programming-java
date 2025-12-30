@@ -1,61 +1,62 @@
-package assignments.Ex4;
+package assignments.Ex4.Levels;
 
 import assignments.Ex1.Point;
 import assignments.Ex1.Velocity;
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
+import assignments.Ex4.Green3Background;
+import assignments.Ex4.LevelInformation;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FinalFour implements LevelInformation {
+public class Green3 implements LevelInformation {
 
     private static final int WIDTH = 800;
-    private static final int BORDER = 20;
+    private static final int HEIGHT = 600;
 
     @Override
     public int numberOfBalls() {
-        return 3;
+        return 2;
     }
 
     @Override
     public List<Velocity> initialBallVelocities() {
+        // 2 balls (one go right and the other left)
         List<Velocity> list = new ArrayList<>();
-        list.add(new Velocity(-3, -5));
-        list.add(new Velocity(0, -6));
-        list.add(new Velocity(3, -5));
+        list.add(new Velocity(-3, -4));
+        list.add(new Velocity(3, -4));
         return list;
     }
 
     @Override
     public List<Point> initialBallPositions() {
         List<Point> list = new ArrayList<>();
-        list.add(new Point(315, 460));
-        list.add(new Point(400, 430));
-        list.add(new Point(485, 460));
+        list.add(new Point (390, 520));
+        list.add(new Point (410, 520));
         return list;
     }
 
     @Override
     public int paddleSpeed() {
-        return 9;
+        return 10;
     }
 
     @Override
     public int paddleWidth() {
-        return 110;
+        return 120;
     }
 
     @Override
     public String levelName() {
-        return "FinalFour";
+        return "Green 3";
     }
 
     @Override
     public Sprite getBackground() {
-        return new FinalFourBackground();
+        return new Green3Background();
     }
 
     @Override
@@ -65,35 +66,32 @@ public class FinalFour implements LevelInformation {
         int blockW = 50;
         int blockH = 25;
 
-        int rows = 7;
+        int rows = 5;
+        int topRowCount = 10;
 
         int gapX = 7;
         int gapY = 5;
 
         int borderSize = 20;
+        int rightEdge = 800 - borderSize - gapX;
 
-        // maximum blocks per row that still fit between the borders
-        int availableWidth = 800 - 2 * borderSize;
-        int blocksPerRow = (availableWidth + gapX) / (blockW + gapX);
-
-        // center the row
-        int rowWidth = blocksPerRow * blockW + (blocksPerRow - 1) * gapX;
-        int startX = borderSize + (availableWidth - rowWidth) / 2;
-
-        int startY = 70;
+        int startY = 110;
 
         Color[] rowColors = Block.getRandomColors(rows);
 
         for (int row = 0; row < rows; row++) {
-            int y = startY + row * (blockH + gapY);
+            int count = topRowCount - row; // one block less for every row
+            int y = startY +row * (blockH + gapY);
+
+            int rowWidth = count * blockW + (count - 1) * gapX;
+
+            int x0 = rightEdge - rowWidth;
+
             Color c = rowColors[row];
 
-            for (int i = 0; i < blocksPerRow; i++) {
-                int x = startX + i * (blockW + gapX);
-                blocks.add(new Block(
-                        new Rectangle(new Point(x, y), blockW, blockH),
-                        c
-                ));
+            for (int i = 0; i < count; i++) {
+                int x = x0 + i * (blockW + gapX);
+                blocks.add(new Block(new Rectangle(new Point(x,y),blockW,blockH), c));
             }
         }
         return blocks;

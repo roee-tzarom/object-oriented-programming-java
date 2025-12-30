@@ -1,10 +1,12 @@
-package assignments.Ex4;
+package assignments.Ex4.Levels;
 
 import assignments.Ex1.Point;
 import assignments.Ex1.Velocity;
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
+import assignments.Ex4.DirectHitBackground;
+import assignments.Ex4.LevelInformation;
 
 import java.awt.Color;
 import java.util.ArrayList;
