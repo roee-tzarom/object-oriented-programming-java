@@ -75,10 +75,10 @@ public class GameLevel implements Animation {
         this.countBalls = new Counter(this.levelInfo.numberOfBalls());
         BallRemover ballRemover = new BallRemover(this, this.countBalls);
 
-        Block top = new Block(new Rectangle(new Point(0, 0), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
+        Block top = new Block(new Rectangle(new Point(0, -BORDER_SIZE), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
         top.addToGame(this);
 
-        Block bottom = new Block(new Rectangle(new Point(0, HEIGHT - BORDER_SIZE), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
+        Block bottom = new Block(new Rectangle(new Point(0, HEIGHT), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
         bottom.addToGame(this);
         bottom.addHitListener(ballRemover);
 
@@ -107,9 +107,10 @@ public class GameLevel implements Animation {
                 paddleWidth, PADDLE_HEIGHT
         );
 
+        Color paddleColor = Color.ORANGE;
         this.paddle = new Paddle(
                 paddleRect,
-                Color.WHITE,
+                paddleColor,
                 this.keyboard,
                 paddleSpeed,
                 BORDER_SIZE,

@@ -74,10 +74,11 @@ public class Paddle implements Sprite, Collidable {
         int w = (int) this.rect.getWidth();
         int h = (int) this.rect.getHeight();
 
+        d.setColor(Color.BLACK);
+        d.fillRectangle(x-2, y-2, w+4, h+4);
         d.setColor(this.color);
         d.fillRectangle(x, y, w, h);
-        d.setColor(Color.BLACK);
-        d.drawRectangle(x, y, w, h);
+
     }
 
     @Override

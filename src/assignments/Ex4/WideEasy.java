@@ -2,12 +2,9 @@ package assignments.Ex4;
 
 import assignments.Ex1.Point;
 import assignments.Ex1.Velocity;
-
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
-
-import biuoop.DrawSurface;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -26,6 +23,7 @@ public class WideEasy implements LevelInformation {
 
     @Override
     public List<Velocity> initialBallVelocities() {
+        // 6 balls (3 go right and the other 3 go left)
         // same speed, different angles (all go upward)
         int[] angles = {-60, -35, -15, 15, 35, 60};
         double speed = 5.0;

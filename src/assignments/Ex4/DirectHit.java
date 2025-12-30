@@ -2,7 +2,6 @@ package assignments.Ex4;
 
 import assignments.Ex1.Point;
 import assignments.Ex1.Velocity;
-
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
@@ -32,9 +31,9 @@ public class DirectHit implements LevelInformation {
     @Override
     public List<Point> initialBallPositions() {
         // start below the target, in the middle
-        List<Point> positions = new ArrayList<>();
-        positions.add(new Point(WIDTH / 2.0, 520));
-        return positions;
+        List<Point> list = new ArrayList<>();
+        list.add(new Point(WIDTH / 2.0, 520));
+        return list;
     }
 
     @Override
