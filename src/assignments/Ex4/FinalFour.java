@@ -32,9 +32,9 @@ public class FinalFour implements LevelInformation {
     @Override
     public List<Point> initialBallPositions() {
         List<Point> list = new ArrayList<>();
-        list.add(new Point(385, 520));
-        list.add(new Point(400, 520));
-        list.add(new Point(415, 520));
+        list.add(new Point(315, 460));
+        list.add(new Point(400, 430));
+        list.add(new Point(485, 460));
         return list;
     }
 
@@ -80,7 +80,7 @@ public class FinalFour implements LevelInformation {
         int rowWidth = blocksPerRow * blockW + (blocksPerRow - 1) * gapX;
         int startX = borderSize + (availableWidth - rowWidth) / 2;
 
-        int startY = 110;
+        int startY = 70;
 
         Color[] rowColors = Block.getRandomColors(rows);
 

@@ -26,7 +26,7 @@ public class Ass2Game {
 
         Counter score = new Counter(0);
 
-        GameLevel game = new GameLevel(level_4, runner, keyboard, score);
+        GameLevel game = new GameLevel(level_2, runner, keyboard, score);
         game.initialize();
         game.run();
 

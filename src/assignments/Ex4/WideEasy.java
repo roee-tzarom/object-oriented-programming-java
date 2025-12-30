@@ -18,14 +18,14 @@ public class WideEasy implements LevelInformation {
 
     @Override
     public int numberOfBalls() {
-        return 6;
+        return 8;
     }
 
     @Override
     public List<Velocity> initialBallVelocities() {
         // 6 balls (3 go right and the other 3 go left)
         // same speed, different angles (all go upward)
-        int[] angles = {-60, -35, -15, 15, 35, 60};
+        int[] angles = {-60, -45, -30, -15, 15, 30, 45, 60};
         double speed = 5.0;
 
         List<Velocity> list = new ArrayList<>();
@@ -44,31 +44,16 @@ public class WideEasy implements LevelInformation {
 
     @Override
     public List<Point> initialBallPositions() {
-        // 3 balls on the left, 3 on the right, arranged as an arc
-        List<Point> positions = new ArrayList<>();
-
-        double centerX = WIDTH / 2.0;
-        double baseY = 430;
-
-        double spread = 60;   // left-right width of the arc
-        double height = 18;   // how "high" the arc is in the middle
-
-        double[] xs = {
-                centerX - spread,
-                centerX - spread * 0.6,
-                centerX - spread * 0.2,
-                centerX + spread * 0.2,
-                centerX + spread * 0.6,
-                centerX + spread
-        };
-
-        for (double x : xs) {
-            double dx = (x - centerX) / spread;       // [-1..1]
-            double y = baseY - height * (1 - dx * dx); // arc (parabola)
-            positions.add(new Point(x, y));
-        }
-
-        return positions;
+        List<Point> list = new ArrayList<>();
+        list.add(new Point(245, 425));
+        list.add(new Point(275, 390));
+        list.add(new Point(310, 365));
+        list.add(new Point(355, 350));
+        list.add(new Point(445, 350));
+        list.add(new Point(490, 365));
+        list.add(new Point(525, 390));
+        list.add(new Point(555, 425));
+        return list;
     }
 
     @Override
