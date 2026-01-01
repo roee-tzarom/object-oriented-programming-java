@@ -7,8 +7,8 @@ import assignments.Ex1.Point;
 import assignments.Ex2.Sprite;
 import assignments.Ex4.LevelInformation;
 
-import assignments.Ex4.OriginalBackground;
-import biuoop.DrawSurface;
+import assignments.Ex4.LevelsBackground.OriginalBackground;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;

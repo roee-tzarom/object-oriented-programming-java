@@ -6,7 +6,7 @@ import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
 import assignments.Ex4.LevelInformation;
-import assignments.Ex4.WideEasyBackground;
+import assignments.Ex4.LevelsBackground.WideEasyBackground;
 
 import java.awt.Color;
 import java.util.ArrayList;

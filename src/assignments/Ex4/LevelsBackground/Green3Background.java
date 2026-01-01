@@ -1,4 +1,4 @@
-package assignments.Ex4;
+package assignments.Ex4.LevelsBackground;
 
 import assignments.Ex2.Sprite;
 
@@ -12,6 +12,14 @@ public class Green3Background implements Sprite {
         // green background
         d.setColor(new Color(0, 130, 0));
         d.fillRectangle(0, 0, 800, 600);
+
+        // small white bar at top
+        d.setColor(Color.WHITE);
+        d.fillRectangle(0, 0, 800, 20);
+
+        // level name
+        d.setColor(Color.BLACK);
+        d.drawText(600, 16, "Level Name: " + "Green 3", 14);
 
         // building
         int bx = 60;

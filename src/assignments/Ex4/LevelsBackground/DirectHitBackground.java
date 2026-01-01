@@ -1,4 +1,4 @@
-package assignments.Ex4;
+package assignments.Ex4.LevelsBackground;
 
 import assignments.Ex2.Sprite;
 import biuoop.DrawSurface;
@@ -12,6 +12,14 @@ public class DirectHitBackground implements Sprite {
         // black background
         d.setColor(Color.BLACK);
         d.fillRectangle(0, 0, 800, 600);
+
+        // small white bar at top
+        d.setColor(Color.WHITE);
+        d.fillRectangle(0, 0, 800, 20);
+
+        // level name
+        d.setColor(Color.BLACK);
+        d.drawText(600, 16, "Level Name: " + "Direct Hit", 14);
 
         // target center (match your DirectHit block area roughly)
         int cx = 400;

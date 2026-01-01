@@ -75,7 +75,7 @@ public class GameLevel implements Animation {
         this.countBalls = new Counter(this.levelInfo.numberOfBalls());
         BallRemover ballRemover = new BallRemover(this, this.countBalls);
 
-        Block top = new Block(new Rectangle(new Point(0, -BORDER_SIZE), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
+        Block top = new Block(new Rectangle(new Point(0, 20), WIDTH, 1), Color.BLACK);
         top.addToGame(this);
 
         Block bottom = new Block(new Rectangle(new Point(0, HEIGHT), WIDTH, BORDER_SIZE), Color.DARK_GRAY);
@@ -107,15 +107,7 @@ public class GameLevel implements Animation {
                 paddleWidth, PADDLE_HEIGHT
         );
 
-        Color paddleColor = Color.ORANGE;
-        this.paddle = new Paddle(
-                paddleRect,
-                paddleColor,
-                this.keyboard,
-                paddleSpeed,
-                BORDER_SIZE,
-                WIDTH - BORDER_SIZE
-        );
+        this.paddle = new Paddle(paddleRect, Color.ORANGE, this.keyboard, paddleSpeed, BORDER_SIZE, WIDTH - BORDER_SIZE);
         this.paddle.addToGame(this);
 
         // balls: now come from both velocities AND positions
@@ -133,7 +125,7 @@ public class GameLevel implements Animation {
         }
 
         // score indicator (uses the shared score)
-        ScoreIndicator scoreIndicator = new ScoreIndicator(this.score, 0, 0, WIDTH, 20);
+        ScoreIndicator scoreIndicator = new ScoreIndicator(this.score, 20, 0, WIDTH, 20);
         this.addSprite(scoreIndicator);
     }
 
@@ -184,4 +176,12 @@ public class GameLevel implements Animation {
             this.running = false;
         }
     }
+    public int remainingBalls() {
+        return this.countBalls.getValue();
+    }
+
+    public int remainingBlocks() {
+        return this.countBlocks.getValue();
+    }
+
 }

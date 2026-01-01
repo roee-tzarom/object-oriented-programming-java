@@ -23,16 +23,9 @@ public class ScoreIndicator implements Sprite {
 
     @Override
     public void drawOn(DrawSurface d) {
-        // small white bar at top
-        d.setColor(Color.WHITE);
-        d.fillRectangle(this.x, this.y, this.width, this.height);
-
-        d.setColor(Color.BLACK);
-        d.drawRectangle(this.x, this.y, this.width, this.height);
-
         // score text
         String text = "Score: " + this.score.getValue();
-        d.drawText(this.x + 10, this.y + this.height - 5, text, 16);
+        d.drawText(this.x + 350, this.y + this.height - 5, text, 16);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package assignments.Ex4;
+package assignments.Ex4.LevelsBackground;
 
 import assignments.Ex2.Sprite;
 
@@ -11,6 +11,14 @@ public class FinalFourBackground implements Sprite {
         // background (dark blue)
         d.setColor(new Color(20, 100, 250));
         d.fillRectangle(0, 0, 800, 600);
+
+        // small white bar at top
+        d.setColor(Color.WHITE);
+        d.fillRectangle(0, 0, 800, 20);
+
+        // level name
+        d.setColor(Color.BLACK);
+        d.drawText(600, 16, "Level Name: " + "FinalFour", 14);
 
         // rain (draw first)
         d.setColor(new Color(170, 200, 255));

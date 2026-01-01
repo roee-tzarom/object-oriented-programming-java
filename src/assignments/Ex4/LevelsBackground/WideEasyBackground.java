@@ -1,4 +1,4 @@
-package assignments.Ex4;
+package assignments.Ex4.LevelsBackground;
 
 import assignments.Ex2.Sprite;
 import biuoop.DrawSurface;
@@ -11,6 +11,14 @@ public class WideEasyBackground implements Sprite {
         // background: white
         d.setColor(Color.WHITE);
         d.fillRectangle(0, 0, 800, 600);
+
+        // small white bar at top
+        d.setColor(Color.WHITE);
+        d.fillRectangle(0, 0, 800, 20);
+
+        // level name
+        d.setColor(Color.BLACK);
+        d.drawText(600, 16, "Level Name: " + "Wide Easy", 14);
 
         // sun position
         int sx = 130;

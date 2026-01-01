@@ -5,7 +5,7 @@ import assignments.Ex1.Velocity;
 import assignments.Ex2.Block;
 import assignments.Ex2.Rectangle;
 import assignments.Ex2.Sprite;
-import assignments.Ex4.Green3Background;
+import assignments.Ex4.LevelsBackground.Green3Background;
 import assignments.Ex4.LevelInformation;
 
 import java.awt.Color;
