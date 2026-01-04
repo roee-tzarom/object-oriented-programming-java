@@ -67,12 +67,9 @@ public class DirectHit implements LevelInformation {
         double blockH = 30;
 
         double x = WIDTH / 2.0 - blockW / 2.0;
-        double y = 150;
+        double y = 115;
 
-        blocks.add(new Block(
-                new Rectangle(new Point(x, y), blockW, blockH),
-                Color.RED
-        ));
+        blocks.add(new Block(new Rectangle(new Point(x, y), blockW, blockH), Color.RED));
 
         return blocks;
     }
