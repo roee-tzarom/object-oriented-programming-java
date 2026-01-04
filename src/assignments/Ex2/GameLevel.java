@@ -10,6 +10,7 @@ import assignments.Ex4.Animation;
 import assignments.Ex4.AnimationRunner;
 import assignments.Ex4.PauseScreen;
 import assignments.Ex4.LevelInformation;
+import assignments.Ex4.KeyPressStoppableAnimation;
 
 import biuoop.DrawSurface;
 import biuoop.KeyboardSensor;
@@ -149,8 +150,9 @@ public class GameLevel implements Animation {
 
         // pause on 'p' or 'פ'
         if (this.keyboard.isPressed("p") || this.keyboard.isPressed("פ")) {
-            this.runner.run(new PauseScreen(this.keyboard));
+            this.runner.run(new KeyPressStoppableAnimation(this.keyboard, KeyboardSensor.SPACE_KEY, new PauseScreen()));
         }
+
 
         if (!this.started) {
             String msg = "Move the paddle (LEFT or RIGHT) to start";
