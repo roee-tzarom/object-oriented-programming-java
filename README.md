@@ -1,42 +1,40 @@
-# Java Block Breaker and OOP Exercises
+# Java Block Breaker
 
-A Java object-oriented programming project that develops from geometry and bouncing-ball animations into a multi-level block-breaker game. The playable entry point is `assignments.Ex4.Ass4Game`.
+A playable, multi-level block-breaker game written in Java. Geometry, motion, collision detection, event listeners and animation flow are organized into cooperating objects, making the game a concrete example of object-oriented design.
 
-## Game architecture
+## What you can play
 
-- **Geometry and movement:** points, line intersections, rectangles, ball velocity and collision calculations.
-- **Game objects:** `Sprite` and `Collidable` interfaces; balls, blocks and paddle implementations.
-- **Event handling:** hit listeners remove balls/blocks and update score.
-- **Animation flow:** a runner and level controller coordinate pause, win and game-over screens.
-- **Levels:** four standard levels plus an optional `Original` bonus level. Command-line level numbers select a subset.
+The game includes a paddle, moving balls, breakable blocks, scoring and multiple level layouts. It displays pause, victory and game-over states. The default game flow runs the standard levels; optional level numbers select a subset. An additional `Original` level is present in the source.
 
-The code is organized by successive course assignments under `src/assignments/Ex1` through `Ex4`. `biuoop-1.4.jar` is the included external drawing/keyboard library.
+## How the pieces fit together
+
+```text
+GameFlow → GameLevel → AnimationRunner
+               │
+               ├─ SpriteCollection → drawable/updatable objects
+               ├─ GameEnvironment → closest collision lookup
+               └─ hit listeners → block removal, ball removal, score
+```
+
+- **Geometry and motion:** points, lines, rectangles and velocity supply collision calculations.
+- **Game objects:** `Sprite` defines drawing and time-step behavior; `Collidable` defines collision geometry and response.
+- **Events:** hit listeners keep score and removal logic separate from the blocks and balls that trigger them.
+- **Level flow:** `GameFlow` coordinates level transitions and terminal screens.
+
+The `biuoop-1.4.jar` included in the repository provides drawing and keyboard support.
 
 ## Build and play
 
-Requires a JDK and a desktop environment. From the repository root on Linux/macOS:
+Use a JDK and a desktop environment. Open the repository in a Java IDE, mark `src/` as a source root and add `biuoop-1.4.jar` to the project classpath. Run the `main` method in `Ass4Game`. To select particular standard levels, supply their numbers as program arguments, for example `1 3`.
 
-```bash
-mkdir -p out
-javac -cp biuoop-1.4.jar -d out $(find src -name '*.java')
-java -cp "out:biuoop-1.4.jar" assignments.Ex4.Ass4Game
-```
+## Where to explore
 
-On Windows, use your IDE to compile `src/` with `biuoop-1.4.jar` on the classpath, or replace the runtime classpath separator `:` with `;`. By default the game runs levels 1–4. For selected levels, pass numbers such as `1 3` after the main class.
+| File or component | Why it matters |
+| --- | --- |
+| `Ass4Game`, `GameFlow` | Entry point and level sequence |
+| `GameLevel`, `AnimationRunner` | Game state, updates and rendering loop |
+| `Ball`, `Paddle`, `Block` | Moving objects and collision responses |
+| `HitListener` implementations | Score and object-removal events |
+| `Levels/`, `LevelsBackground/` | Level configuration and drawing |
 
-This is a coursework game built on the supplied BIU OOP library. The repository also contains exploratory animation entry points; the Ex4 game is the main demonstration.
-
-
-## From geometry to a playable game
-
-The code follows a sequence of OOP assignments. `Ex1` builds the geometry and motion vocabulary: points, lines, velocity and bouncing balls. `Ex2` adds rectangles, collision lookup, a sprite collection and a game environment. `Ex3` introduces event listeners for removing blocks or balls and updating score. `Ex4` controls animation, levels, transitions and terminal win/loss screens. The main game wires those layers together through `Ass4Game` and `GameFlow`.
-
-The two central contracts are `Sprite`, which can draw and update, and `Collidable`, which can report its collision shape and react to a hit. A moving ball searches the environment for the closest collision, then the collided object updates the velocity. Hit listeners decouple block removal and score updates from the block itself. That structure makes the game easier to extend with another level or visual background.
-
-## Explore and customize
-
-Run the default four-level sequence first, then pass level numbers such as `1 3` to choose a subset. The level definitions live in `src/assignments/Ex4/Levels/`; their corresponding background classes live in `LevelsBackground/`. `Original` is an additional level implementation, separate from the default sequence. The included BIU OOP JAR provides graphics and keyboard support, so the program needs a desktop display. Earlier assignment entry points are useful for understanding the progression, while Ex4 is the complete game path.
-
-## Engineering scope
-
-This is a course game with hand-written collision and event logic. It is not packaged as a standalone installer and does not include a unified automated test runner. The repository demonstrates OOP composition, interfaces, listeners and state transitions through a visible application.
+The game uses the included desktop library and runs locally. It is not packaged as an installer or browser game, and its geometry and event logic are intended to be read alongside the playable result.
